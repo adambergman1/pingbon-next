@@ -1,0 +1,13 @@
+@media screen and (max-width: 992px) {
+  .nav {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .nav {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
