@@ -23,6 +23,14 @@ export default class MyDocument extends Document {
       <Html lang='en'>
         <Head>
           <meta charSet='utf-8' />
+          <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+          <meta name='application-name' content='PingBon' />
+          <meta
+            name='description'
+            content='The most optimal way to report your pingpong scores'
+          />
+          <link rel='manifest' href='/manifest.json' />
+          <link rel='apple-touch-icon' href='/icons/icon-192x192.png'></link>
         </Head>
         <body>
           <Main />
