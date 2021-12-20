@@ -76,7 +76,7 @@ export default (props) => {
   );
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   try {
     const players = JSON.parse(JSON.stringify(await service.getAllPlayers()));
     return {
