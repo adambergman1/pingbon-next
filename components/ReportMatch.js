@@ -134,18 +134,21 @@ const ReportMatch = ({ players, onReportedMatch }) => {
           winner &&
           loser && (
             <>
-              <button
-                className='btn btn-secondary me-2'
-                onClick={handleCalculateRatings}
-              >
-                Preview
-              </button>
-              <button
-                className='btn btn-primary me-2'
-                onClick={handleUpdateScore}
-              >
-                Update scores
-              </button>
+              {!calculatedRating ? (
+                <button
+                  className='btn btn-secondary me-2'
+                  onClick={handleCalculateRatings}
+                >
+                  Preview scores
+                </button>
+              ) : (
+                <button
+                  className='btn btn-primary me-2'
+                  onClick={handleUpdateScore}
+                >
+                  Update scores
+                </button>
+              )}
             </>
           )
         )}
