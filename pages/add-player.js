@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Head from 'next/head';
 import * as api from '../lib/api/players';
+import Title from '../components/Title';
 
 export default () => {
   const [name, setName] = useState('');
@@ -30,9 +30,7 @@ export default () => {
 
   return (
     <>
-      <Head>
-        <title>Add Player - PingBon</title>
-      </Head>
+      <Title title='Add Player' />
       <div className='container my-5'>
         <div className='row'>
           <div className='col-md-4'>

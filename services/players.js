@@ -1,4 +1,6 @@
+import dbConnect from '../lib/mongoose';
 import Player from '../lib/models/Player';
+dbConnect();
 
 export const getAllPlayers = () => Player.find({}).select('-__v');
 

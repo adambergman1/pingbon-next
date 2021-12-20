@@ -1,0 +1,48 @@
+.player {
+  display: flex;
+  flex-flow: column wrap;
+  background-color: white;
+  padding: 24px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  position: relative;
+
+  .name {
+    font-weight: 500;
+  }
+
+  .position {
+    background-color: #eee;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    font-size: 11px;
+    line-height: 2rem;
+    text-align: center;
+    vertical-align: middle;
+    position: absolute;
+    top: 7px;
+    right: 7px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-gap: 16px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}

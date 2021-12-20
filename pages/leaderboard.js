@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
 import PlayerListItem from '../components/PlayerListItem';
 import * as service from '../services/players';
 import * as api from '../lib/api/players';
+import Title from '../components/Title';
 
 export default (props) => {
   const [players, setPlayers] = useState([]);
@@ -39,9 +39,7 @@ export default (props) => {
 
   return (
     <>
-      <Head>
-        <title>Leaderboard - PingBon</title>
-      </Head>
+      <Title title='Leaderboard' />
       <div className='container py-5'>
         <div className='mb-5'>
           <h1>Scoreboard</h1>

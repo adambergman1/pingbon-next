@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
-import styles from '../styles/Home.module.css';
+import styles from '../styles/Home.module.scss';
 import ReportMatch from '../components/ReportMatch';
 import * as service from '../services/players';
 import * as api from '../lib/api/players';
+import Title from '../components/Title';
 
 export default (props) => {
   const [players, setPlayers] = useState([]);
@@ -35,9 +35,7 @@ export default (props) => {
 
   return (
     <>
-      <Head>
-        <title>PingBon</title>
-      </Head>
+      <Title />
       <div className='container py-5'>
         {players?.length && (
           <div className='row'>
@@ -59,11 +57,9 @@ export default (props) => {
                 {players?.length &&
                   players.slice(0, 10).map((player, index) => (
                     <div className={styles.player} key={index}>
-                      <span className={styles.player_name}>{player.name}</span>
+                      <span className={styles.name}>{player.name}</span>
                       <span>Rating: {player.rating}</span>
-                      <span className={styles.player_position}>
-                        {index + 1}
-                      </span>
+                      <span className={styles.position}>{index + 1}</span>
                     </div>
                   ))}
               </div>

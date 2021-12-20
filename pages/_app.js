@@ -1,6 +1,4 @@
-import '../styles/global.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import '../styles/main.scss';
 import React from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
