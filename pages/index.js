@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import useSWR from 'swr';
 import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 import ReportMatch from '../components/ReportMatch';
-import { editPlayer } from '../lib/api/players';
+import * as service from '../services/players';
+import * as api from '../lib/api/players';
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
-
-export default () => {
-  const { data, error } = useSWR('/api/players', fetcher);
+export default (props) => {
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
-    if (data?.length) {
-      setPlayers([...data].sort((a, b) => (a.rating > b.rating ? -1 : 1)));
+    if (props?.players?.length) {
+      setPlayers(
+        [...props.players].sort((a, b) => (a.rating > b.rating ? -1 : 1))
+      );
     }
-  }, [data]);
+  }, [props]);
 
   const handleReportMatch = async ({ winner, loser }) => {
     try {
-      await editPlayer(winner._id, winner);
-      await editPlayer(loser._id, loser);
+      await api.editPlayer(winner._id, winner);
+      await api.editPlayer(loser._id, loser);
       const updatedPlayers = [...players];
       const winnerIndex = updatedPlayers.findIndex((p) => p._id === winner._id);
       const loserIndex = updatedPlayers.findIndex((p) => p._id === loser._id);
@@ -73,10 +72,27 @@ export default () => {
               </Link>
             </>
           ) : (
-            error && <p className='text-danger'>{error}</p>
+            props?.error && <p className='text-danger'>{props.error}</p>
           )}
         </div>
       </div>
     </>
   );
 };
+
+export async function getStaticProps() {
+  try {
+    const players = JSON.parse(JSON.stringify(await service.getAllPlayers()));
+    return {
+      props: {
+        players,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {
+        error,
+      },
+    };
+  }
+}

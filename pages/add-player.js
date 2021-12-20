@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
-import { addPlayer } from '../lib/api/players';
+import * as api from '../lib/api/players';
 
 export default () => {
   const [name, setName] = useState('');
@@ -20,7 +20,7 @@ export default () => {
       setError('Name is too long. Use less than 100 characters.');
     } else {
       try {
-        await addPlayer(name);
+        await api.addPlayer(name);
         setAdded(true);
       } catch (error) {
         setError(error?.response?.data?.error || error);
@@ -38,24 +38,22 @@ export default () => {
           <div className='col-md-4'>
             <h1>Add new Player</h1>
             <p>Everyone is free to join!</p>
-            <label>Enter the player's full name (must be unique)</label>
             <div className='input-group mb-3'>
               <input
                 type='text'
                 className='form-control'
-                placeholder='John Doe'
+                placeholder='Enter name (must be unique)'
                 value={name}
                 onChange={handleChange}
               />
-              <div className='input-group-append'>
-                <button
-                  disabled={!name}
-                  className='btn btn-primary'
-                  onClick={handleAddPlayer}
-                >
-                  Add Player
-                </button>
-              </div>
+              <button
+                type='button'
+                className='btn btn-dark'
+                disabled={!name}
+                onClick={handleAddPlayer}
+              >
+                Add Player
+              </button>
             </div>
 
             {added ? (

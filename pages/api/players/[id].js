@@ -1,5 +1,5 @@
 import dbConnect from '../../../lib/mongoose';
-import Player from '../../../lib/models/Player';
+import * as service from '../../../services/players';
 
 export default async function handler(req, res) {
   const { method } = req;
@@ -20,17 +20,11 @@ export default async function handler(req, res) {
 }
 
 async function editPlayer(req, res) {
-  const values = {};
-
-  Object.keys(req.body).forEach((prop) => {
-    values[prop] = req.body[prop];
-  });
+  const id = req.query.id;
+  const values = req.body;
 
   try {
-    const updatedPlayer = await Player.updateOne(
-      { _id: req.query.id },
-      { $set: values }
-    );
+    const updatedPlayer = await service.editPlayer(id, values);
     res.send(updatedPlayer);
   } catch (error) {
     res.status(500).json({ error });
@@ -40,7 +34,7 @@ async function editPlayer(req, res) {
 async function deletePlayer(req, res) {
   const { id } = req.query;
   try {
-    const result = await Player.deleteOne({ _id: id });
+    const result = await service.deletePlayer(id);
 
     if (result.n === 0) {
       return res.status(404).json({ error: 'Player does not exist' });

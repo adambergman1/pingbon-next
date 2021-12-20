@@ -5,7 +5,6 @@ import { getUpdatedRatings } from '../lib/elo';
 const ReportMatch = ({ players, onReportedMatch }) => {
   const [winner, setWinner] = useState(null);
   const [loser, setLoser] = useState(null);
-  const [added, setAdded] = useState(false);
   const [playerOptions, setPlayerOptions] = useState([]);
   const [calculatedRating, setCalculatedRating] = useState(null);
   const [error, setError] = useState('');
@@ -46,7 +45,6 @@ const ReportMatch = ({ players, onReportedMatch }) => {
           numberOfPlayedMatches: losingPlayer.numberOfPlayedMatches + 1,
         },
       });
-      setAdded(true);
       setCalculatedRating(null);
       setWinner(null);
       setLoser(null);
@@ -54,14 +52,6 @@ const ReportMatch = ({ players, onReportedMatch }) => {
       console.log(error);
       setError('Failed to report match. Please try again later.');
     }
-  };
-
-  const handleRevert = () => {
-    // actions.revertLastGame();
-    setAdded(false);
-    setCalculatedRating(null);
-    setWinner(null);
-    setLoser(null);
   };
 
   const handleCalculateRatings = () => {
@@ -139,26 +129,24 @@ const ReportMatch = ({ players, onReportedMatch }) => {
       <div className='d-flex align-items-center'>
         {error ? (
           <p className='text-danger'>{error}</p>
-        ) : winner !== loser && winner && loser ? (
-          <>
-            <button
-              className='btn btn-secondary me-2'
-              onClick={handleCalculateRatings}
-            >
-              Preview
-            </button>
-            <button
-              className='btn btn-primary me-2'
-              onClick={handleUpdateScore}
-            >
-              Update scores
-            </button>
-          </>
         ) : (
-          added && (
-            <button className='btn btn-danger' onClick={handleRevert}>
-              Revert latest round
-            </button>
+          winner !== loser &&
+          winner &&
+          loser && (
+            <>
+              <button
+                className='btn btn-secondary me-2'
+                onClick={handleCalculateRatings}
+              >
+                Preview
+              </button>
+              <button
+                className='btn btn-primary me-2'
+                onClick={handleUpdateScore}
+              >
+                Update scores
+              </button>
+            </>
           )
         )}
       </div>

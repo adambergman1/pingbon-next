@@ -1,5 +1,5 @@
 import dbConnect from '../../lib/mongoose';
-import Player from '../../lib/models/Player';
+import * as service from '../../services/players';
 
 export default async function handler(req, res) {
   const { method } = req;
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
 async function getAllPlayers(req, res) {
   try {
-    const players = await Player.find({}).select('-__v');
+    const players = await service.getAllPlayers();
     res.send(players);
   } catch (error) {
     res.status(500).json({ error });
@@ -30,7 +30,7 @@ async function getAllPlayers(req, res) {
 
 async function addPlayer(req, res) {
   try {
-    const player = await Player.create(req.body);
+    const player = await service.addPlayer(req.body);
     res.status(201).send(player);
   } catch (error) {
     if (error?.code === 11000) {
