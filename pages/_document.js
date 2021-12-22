@@ -1,6 +1,9 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
+const APP_NAME = 'PingBon';
+const APP_DESCRIPTION = 'The most optimal way to report your pingpong scores';
+
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const originalRenderPage = ctx.renderPage;
@@ -24,13 +27,16 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet='utf-8' />
           <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-          <meta name='application-name' content='PingBon' />
+          <meta name='application-name' content={APP_NAME} />
+          <meta name='apple-mobile-web-app-capable' content='yes' />
           <meta
-            name='description'
-            content='The most optimal way to report your pingpong scores'
+            name='apple-mobile-web-app-status-bar-style'
+            content='default'
           />
+          <meta name='apple-mobile-web-app-title' content={APP_NAME} />
+          <meta name='description' content={APP_DESCRIPTION} />
+          <link rel='apple-touch-icon' href='/icons/icon-180x180.png'></link>
           <link rel='manifest' href='/manifest.json' />
-          <link rel='apple-touch-icon' href='/icons/icon-192x192.png'></link>
         </Head>
         <body>
           <Main />
