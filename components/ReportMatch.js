@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { getUpdatedRatings } from '../lib/elo';
+import Loading from './Loading';
 
-const ReportMatch = ({ players, onReportedMatch }) => {
+const ReportMatch = ({ players, onReportedMatch, loading }) => {
   const [winner, setWinner] = useState(null);
   const [loser, setLoser] = useState(null);
   const [playerOptions, setPlayerOptions] = useState([]);
@@ -143,10 +144,11 @@ const ReportMatch = ({ players, onReportedMatch }) => {
                 </button>
               ) : (
                 <button
-                  className='btn btn-primary me-2'
+                  className='btn btn-dark me-2'
                   onClick={handleUpdateScore}
+                  disabled={loading}
                 >
-                  Update scores
+                  {!loading ? 'Update scores' : <Loading light />}
                 </button>
               )}
             </>

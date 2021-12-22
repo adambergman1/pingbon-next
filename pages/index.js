@@ -8,16 +8,17 @@ import Title from '../components/Title';
 
 export default (props) => {
   const [players, setPlayers] = useState([]);
+  const [isReportingMatch, setIsReportingMatch] = useState(false);
 
   useEffect(() => {
     if (props?.players?.length) {
-      setPlayers(
-        [...props.players].sort((a, b) => (a.rating > b.rating ? -1 : 1))
-      );
+      setPlayers([...props.players].sort((a, b) => a.rating > b.rating));
     }
   }, [props]);
 
   const handleReportMatch = async ({ winner, loser }) => {
+    setIsReportingMatch(true);
+
     try {
       await api.editPlayer(winner._id, winner);
       await api.editPlayer(loser._id, loser);
@@ -31,6 +32,8 @@ export default (props) => {
       console.log(error);
       throw Error(error);
     }
+
+    setIsReportingMatch(false);
   };
 
   return (
@@ -43,6 +46,7 @@ export default (props) => {
               <ReportMatch
                 players={players}
                 onReportedMatch={handleReportMatch}
+                loading={isReportingMatch}
               />
             </div>
           </div>

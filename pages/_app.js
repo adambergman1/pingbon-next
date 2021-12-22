@@ -3,6 +3,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Layout from '../components/layouts/Layout';
+import ProgressBar from '../components/ProgressBar';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -16,6 +17,7 @@ function MyApp({ Component, pageProps }) {
         />
       </Head>
       <Layout>
+        <ProgressBar />
         <Component {...pageProps} key={router.asPath} />
       </Layout>
     </>

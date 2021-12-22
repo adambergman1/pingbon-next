@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import * as api from '../lib/api/players';
 import Title from '../components/Title';
+import Loading from '../components/Loading';
 
 export default () => {
   const [name, setName] = useState('');
   const [added, setAdded] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setAdded(false);
@@ -19,12 +21,14 @@ export default () => {
     } else if (name.length > 100) {
       setError('Name is too long. Use less than 100 characters.');
     } else {
+      setLoading(true);
       try {
         await api.addPlayer(name);
         setAdded(true);
       } catch (error) {
         setError(error?.response?.data?.error || error);
       }
+      setLoading(false);
     }
   };
 
@@ -47,10 +51,10 @@ export default () => {
               <button
                 type='button'
                 className='btn btn-dark'
-                disabled={!name}
+                disabled={!name || loading}
                 onClick={handleAddPlayer}
               >
-                Add Player
+                {!loading ? 'Add Player' : <Loading light />}
               </button>
             </div>
 
