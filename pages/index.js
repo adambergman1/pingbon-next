@@ -12,7 +12,9 @@ export default (props) => {
 
   useEffect(() => {
     if (props?.players?.length) {
-      setPlayers([...props.players].sort((a, b) => a.rating > b.rating));
+      setPlayers(
+        [...props.players].sort((a, b) => (a.rating > b.rating ? -1 : 1))
+      );
     }
   }, [props]);
 
