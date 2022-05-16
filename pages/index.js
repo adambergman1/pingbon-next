@@ -5,6 +5,7 @@ import ReportMatch from '../components/ReportMatch';
 import * as service from '../services/players';
 import * as api from '../lib/api/players';
 import Title from '../components/Title';
+import { trimDecimals } from '../lib/helpers';
 
 export default (props) => {
   const [players, setPlayers] = useState([]);
@@ -69,7 +70,7 @@ export default (props) => {
                 {topPlayers.map((player, index) => (
                     <div className={styles.player} key={index}>
                       <span className={styles.name}>{player.name}</span>
-                      <span>Rating: {player.rating}</span>
+                      <span>Rating: {trimDecimals(player.rating)}</span>
                       <span className={styles.position}>{index + 1}</span>
                     </div>
                   ))}

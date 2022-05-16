@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { getUpdatedRatings } from '../lib/elo';
+import { trimDecimals } from '../lib/helpers';
 import Loading from './Loading';
 
 const ReportMatch = ({ players, onReportedMatch, loading }) => {
@@ -21,7 +22,7 @@ const ReportMatch = ({ players, onReportedMatch, loading }) => {
         .sort((a, b) => b.rating - a.rating)
         .map((player) => ({
           value: player._id,
-          label: `${player.name} (${player.rating})`,
+          label: `${player.name} (${trimDecimals(player.rating)})`,
         }))
     );
   }, [players]);
