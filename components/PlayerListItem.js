@@ -23,6 +23,8 @@ const PlayerListItem = ({ player, onRemove, onEdit }) => {
 
   const { _id, __v, ...rest } = player;
 
+  const formattedValue = (value) => isNaN(value) ? value : (value % 1 !== 0) ? value.toFixed(1) : value;
+
   return (
     <tr>
       {Object.keys(rest).map((key) => (
@@ -31,11 +33,11 @@ const PlayerListItem = ({ player, onRemove, onEdit }) => {
             <input
               key={'player_' + key + '_editable'}
               type={typeof player[key]}
-              value={values[key]}
+              value={formattedValue(values[key])}
               onChange={(e) => handleEdit(key, e)}
             />
           ) : (
-            player[`${key}`]
+            formattedValue(player[key])
           )}
         </td>
       ))}

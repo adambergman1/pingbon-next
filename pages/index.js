@@ -9,6 +9,7 @@ import Title from '../components/Title';
 export default (props) => {
   const [players, setPlayers] = useState([]);
   const [isReportingMatch, setIsReportingMatch] = useState(false);
+  const [topPlayers, setTopPlayers] = useState([]);
 
   useEffect(() => {
     if (props?.players?.length) {
@@ -17,6 +18,11 @@ export default (props) => {
       );
     }
   }, [props]);
+
+  useEffect(() => {
+    const topFive = players.filter(player => player.numberOfPlayedMatches > 0).slice(0, 5);
+    setTopPlayers(topFive);
+  }, [players])
 
   const handleReportMatch = async ({ winner, loser }) => {
     setIsReportingMatch(true);
@@ -56,12 +62,11 @@ export default (props) => {
 
         <div className='mb-5'>
           <h2>Scoreboard</h2>
-          {players?.length ? (
+          {topPlayers?.length ? (
             <>
-              <p>Listing top 10 players</p>
+              <p>Listing top { topPlayers.length } players</p>
               <div className={`${styles.grid} mb-4`}>
-                {players?.length &&
-                  players.slice(0, 10).map((player, index) => (
+                {topPlayers.map((player, index) => (
                     <div className={styles.player} key={index}>
                       <span className={styles.name}>{player.name}</span>
                       <span>Rating: {player.rating}</span>
