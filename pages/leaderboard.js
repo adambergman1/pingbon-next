@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import _orderBy from 'lodash.orderby';
 import PlayerListItem from '../components/PlayerListItem';
 import * as service from '../services/players';
 import * as api from '../lib/api/players';
@@ -6,15 +7,21 @@ import Title from '../components/Title';
 
 export default (props) => {
   const [players, setPlayers] = useState([]);
+  const [sortedPlayers, setSortedPlayers] = useState([]);
   const [error, setError] = useState('');
+  const [sortedBy, setSortedBy] = useState('rating');
+  const [sortOrder, setSortOrder] = useState('desc');
 
   useEffect(() => {
     if (props?.players?.length) {
-      setPlayers(
-        [...props.players].sort((a, b) => (a.rating > b.rating ? -1 : 1))
-      );
+      const sorted = _orderBy(props.players, (player) => player.rating, sortOrder);
+      setPlayers(sorted);
     }
   }, [props]);
+
+  useEffect(() => {
+    setSortedPlayers(players);
+  }, [players]);
 
   const handleEdit = async (player) => {
     try {
@@ -37,32 +44,54 @@ export default (props) => {
     }
   };
 
+  const sortBy = (key) => {
+    const orderToSort = sortedBy === key ? (sortOrder === 'asc' ? 'desc' : 'asc') : 'desc';
+    const sorted = _orderBy(players, (player) => player[key], orderToSort);
+    setSortedPlayers(sorted);
+    setSortedBy(key);
+    setSortOrder(orderToSort);
+  };
+
+  const SortButton = ({ sortKey }) => (
+    <button
+      className={`btn btn-link btn-sm ${sortedBy === sortKey ? 'active' : 't-dec-none'}`}
+      onClick={() => sortBy(sortKey)}
+    >
+      {sortedBy === sortKey ? sortOrder === 'asc' ? <ArrowDown /> : <ArrowUp /> : <ArrowDown />}
+    </button>
+  );
+
+  const ArrowUp = () => <span>&#8593;</span>;
+  const ArrowDown = () => <span>&#8595;</span>;
+
   return (
     <>
       <Title title='Leaderboard' />
       <div className='container py-5'>
         <div className='mb-5'>
           <h1>Scoreboard</h1>
-          {players?.length ? (
-            <p>Showing {players.length} player scores</p>
-          ) : (
-            <p>No players yet</p>
-          )}
+          {sortedPlayers?.length ? <p>Showing {sortedPlayers.length} player scores</p> : <p>No players yet</p>}
 
-          {players?.length && (
+          {sortedPlayers?.length && (
             <div className='table-responsive'>
               <table className='table table-hover'>
                 <thead className='thead-light'>
                   <tr>
-                    <th>Name</th>
-                    <th>Rating</th>
-                    <th>Number of played matches</th>
+                    <th>
+                      Name <SortButton sortKey='name' />
+                    </th>
+                    <th>
+                      Rating <SortButton sortKey='rating' />
+                    </th>
+                    <th>
+                      Number of played matches <SortButton sortKey='numberOfPlayedMatches' />
+                    </th>
                     <th></th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {players.map((player) => (
+                  {sortedPlayers.map((player) => (
                     <PlayerListItem
                       player={player}
                       onEdit={handleEdit}
@@ -74,10 +103,7 @@ export default (props) => {
               </table>
             </div>
           )}
-          {error ||
-            (props?.error && (
-              <p className='text-danger'>{error || props.error}</p>
-            ))}
+          {error || (props?.error && <p className='text-danger'>{error || props.error}</p>)}
         </div>
       </div>
     </>
