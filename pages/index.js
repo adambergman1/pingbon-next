@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Home.module.scss';
 import ReportMatch from '../components/ReportMatch';
+import ReportLadderMatch from '../components/ReportLadderMatch';
 import * as service from '../services/players';
 import * as api from '../lib/api/players';
 import Title from '../components/Title';
@@ -53,6 +54,18 @@ export default (props) => {
           <div className='row'>
             <div className='mb-5 col-md-6'>
               <ReportMatch
+                players={players}
+                onReportedMatch={handleReportMatch}
+                loading={isReportingMatch}
+              />
+            </div>
+          </div>
+        )}
+
+        {players?.length && (
+          <div className='row'>
+            <div className='mb-5 col-md-6'>
+              <ReportLadderMatch
                 players={players}
                 onReportedMatch={handleReportMatch}
                 loading={isReportingMatch}
