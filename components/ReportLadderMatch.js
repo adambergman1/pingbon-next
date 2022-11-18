@@ -5,50 +5,70 @@ import { trimDecimals } from '../lib/helpers';
 import Loading from './Loading';
 
 const ReportLadderMatch = ({ players, onReportedMatch, loading }) => {
-  const [winner, setWinner] = useState(null);
-  const [loser, setLoser] = useState(null);
-  const [playerOptions, setPlayerOptions] = useState([]);
+  const [challenger, setChallenger] = useState(null);
+  const [opponent, setOpponent] = useState(null);
+  const [challengerOptions, setChallengerOptions] = useState([]);
+  const [opponentOptions, setOpponentOptions] = useState([]);
   const [error, setError] = useState('');
 
   useEffect(() => {
     setError('');
-  }, [winner, loser]);
+  }, [challenger, opponent]);
 
   useEffect(() => {
-    setPlayerOptions(
+    setChallengerOptions(
       [...players]
         .sort((a, b) => a.ladderPosition - b.ladderPosition)
+        .filter((player) => (player.ladderPosition != 1))
         .map((player) => ({
           value: player._id,
-          label: `${player.name} (${trimDecimals(player.rating)})`,
-        }))
+          label: `(${player.ladderPosition}) ${player.name} `,
+        })),
     );
   }, [players]);
+
+  useEffect(() => {
+    if (!challenger || players.length < 0) {
+      return
+    }
+    const challengerPosition = players.find((player) => player._id === challenger.value).ladderPosition
+    setOpponentOptions(
+      [...players]
+        .sort((a, b) => a.ladderPosition - b.ladderPosition)
+        .filter((player) => player.ladderPosition < challengerPosition && player.ladderPosition > challengerPosition - 3 )
+        .map((player) => ({
+          value: player._id,
+          label: `(${player.ladderPosition}) ${player.name} `,
+        }))
+    );
+  }, [challenger]);
 
   const handleUpdateLadderPosition = async (e) => {
     e.preventDefault();
 
-    const winningPlayer = players.find((p) => p._id === winner.value);
-    const losingPlayer = players.find((p) => p._id === loser.value);
+    const challengerPlayer = players.find((p) => p._id === challenger.value);
+    const opponentPlayer = players.find((p) => p._id === opponent.value);
 
-    const winnerPosition = winningPlayer.ladderPosition < losingPlayer.ladderPosition ? winningPlayer.ladderPosition : losingPlayer.ladderPosition
-    const losingPosition = winningPlayer.ladderPosition > losingPlayer.ladderPosition ? winningPlayer.ladderPosition : losingPlayer.ladderPosition
+    const winnerPosition = challengerPlayer.ladderPosition < opponentPlayer.ladderPosition ? challengerPlayer.ladderPosition : opponentPlayer.ladderPosition
+    const losingPosition = challengerPlayer.ladderPosition > opponentPlayer.ladderPosition ? challengerPlayer.ladderPosition : opponentPlayer.ladderPosition
 
     try {
       await onReportedMatch({
         winner: {
-          ...winningPlayer,
-          rating: winningPlayer.rating,
-          numberOfPlayedMatches: winningPlayer.numberOfPlayedMatches,
-          ladderPosition: 1,
+          ...challengerPlayer,
+          rating: challengerPlayer.rating,
+          numberOfPlayedMatches: challengerPlayer.numberOfPlayedMatches,
+          ladderPosition: winnerPosition
         },
         loser: {
-          ...losingPlayer,
-          rating: losingPlayer.rating,
-          numberOfPlayedMatches: losingPlayer.numberOfPlayedMatches,
-          ladderPosition: 2,
+          ...opponentPlayer,
+          rating: opponentPlayer.rating,
+          numberOfPlayedMatches: opponentPlayer.numberOfPlayedMatches,
+          ladderPosition: losingPosition,
         },
       });
+      setChallenger(null);
+      setOpponent(null);
     } catch (error) {
       console.log(error);
       setError('Failed to report match. Please try again later.');
@@ -66,21 +86,27 @@ const ReportLadderMatch = ({ players, onReportedMatch, loading }) => {
           <Select
             isClearable
             placeholder='Select a challenger'
-            value={winner}
-            onChange={setWinner}
-            options={playerOptions}
+            value={challenger}
+            onChange={setChallenger}
+            options={challengerOptions}
           />
         </div>
 
         <div className='d-flex flex-column w-100'>
-          <label>Loser</label>
-          <Select
-            isClearable
-            placeholder='Select a loser if the challenger won'
-            value={loser}
-            onChange={setLoser}
-            options={playerOptions}
-          />
+          {
+            challenger && (
+              <>
+                <label>Opponent</label>
+                <Select
+                  isClearable
+                  placeholder='Select an opponent if you won'
+                  value={opponent}
+                  onChange={setOpponent}
+                  options={opponentOptions}
+                />
+              </>
+            )
+          }
         </div>
       </div>
 
@@ -88,15 +114,16 @@ const ReportLadderMatch = ({ players, onReportedMatch, loading }) => {
         {error ? (
           <p className='text-danger'>{error}</p>
         ) : (
-          winner !== loser &&
-          winner &&
-          loser && (
+          challenger !== opponent &&
+          challenger &&
+          opponent && (
             <>
                 <button
                   className='btn btn-secondary me-2'
                   onClick={handleUpdateLadderPosition}
+                  disabled={loading}
                 >
-                  Update ladder positions
+                  {!loading ? 'Update ladder' : <Loading light />}
                 </button>
             </>
           )
