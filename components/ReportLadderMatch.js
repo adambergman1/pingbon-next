@@ -28,14 +28,15 @@ const ReportLadderMatch = ({ players, onReportedMatch, loading }) => {
   }, [players]);
 
   useEffect(() => {
-    if (!challenger || players.length < 0) {
+    if (!challenger || !players.length) {
       return
     }
     const challengerPosition = players.find((player) => player._id === challenger.value).ladderPosition
+    const maximumLadderPositions = 2
     setOpponentOptions(
       [...players]
         .sort((a, b) => a.ladderPosition - b.ladderPosition)
-        .filter((player) => player.ladderPosition < challengerPosition && player.ladderPosition > challengerPosition - 3 )
+        .filter((player) => player.ladderPosition < challengerPosition && player.ladderPosition >= challengerPosition - maximumLadderPositions )
         .map((player) => ({
           value: player._id,
           label: `(${player.ladderPosition}) ${player.name} `,
@@ -76,7 +77,7 @@ const ReportLadderMatch = ({ players, onReportedMatch, loading }) => {
   };
 
   return (
-    <div className=''>
+    <div>
       <h2>Update ladder</h2>
       <p>Challenged someone on the ladder? Enter the match here if you won.</p>
 
