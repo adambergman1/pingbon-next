@@ -17,6 +17,10 @@ const LINKS = [
     path: '/add-player',
     name: 'Add Player',
   },
+  {
+    path: '/ladder',
+    name: 'Pingpong Ladder',
+  },
 ];
 
 const Header = () => {
